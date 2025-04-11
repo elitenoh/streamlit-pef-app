@@ -46,18 +46,19 @@ if uploaded_file:
 
     with col2:
         st.subheader("🗺️ 자동 생성된 구조도")
+# (1) G 정의 먼저
+G = nx.DiGraph()
+# G.add_edges_from(...) 또는 엑셀에서 엣지 불러오는 코드
+
+# (2) 그 다음에 이 코드 추가
 fig, ax = plt.subplots(figsize=(10, 6))
-
-# 👉 노드 간격 넓힘 (k 조절)
 pos = nx.spring_layout(G, seed=42, k=1.8)
-
-# 👉 노드 크기 키움, 폰트 크기 줄임
 nx.draw(G, pos, with_labels=True,
         node_size=3500, node_color="skyblue",
         font_size=10, arrowsize=20, font_weight='bold', ax=ax)
 
-# 👉 엣지 라벨도 폰트 작게
+edge_labels = {
+    (u, v): f"{d['amount']}, {d['ownership']}" for u, v, d in G.edges(data=True)
+}
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, ax=ax)
-
 st.pyplot(fig)
-
